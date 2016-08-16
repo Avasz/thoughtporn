@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#This is a shitty script which downloads a random image from few top posts of /r/earthporn and combines it with genius showerthoughts from /r/showerthoughts 
+#This is a shitty script which downloads a random image from 100 top posts of the week in /r/earthporn and combines it with genius showerthoughts from /r/showerthoughts 
 #to give it a really witty and philosphical look which is really popular nowadays in various social media.
 #Hats off to the photographers from /r/earthporn. I do not own any pictures or thoughts. All credits to the photographers from /r/earthporn and geniuses from /r/showerthoughts.
 #I am not held liable if anyone uses the iamges generated from this script and gets in legal trouble. Use it at your own risk.
@@ -13,21 +13,14 @@ useragent="Mozilla/5.0 (X11; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"
 
 echo "Starting brain..."
 #Download earthporn & showerthoughts subreddit top few posts
-wget get --header="Accept: text/html" -U $useragent --no-check-certificate -q  - $url$img_subreddit/.json -O /tmp/tp_earthporn.json
+wget get --header="Accept: text/html" -U $useragent --no-check-certificate -q  - "$url$img_subreddit/top.json?sort=top&t=week&limit=100" -O /tmp/tp_earthporn.json
 wget get --header="Accept: text/html" -U $useragent --no-check-certificate -q  - "$url$text_subreddit/top.json?sort=top&t=week&limit=100" -O /tmp/tp_showerthoughts.json
 
 
-#Filter images URL and titles from the subreddits. Filtering is not perfect right now, but works most of the times
-#grep -Po '"url":.*?[^\\]",' /tmp/tp_earthporn.json |cut -f 4 -d '"' > /tmp/tp_earthporn_img
-#sed -i -e '/crop/d' -e '1d; n; d' /tmp/tp_earthporn_img
+#Filter images URL , their authors and showerthought titles from the subreddits. Filtering is not perfect right now, but works most of the times
 cat /tmp/tp_earthporn.json | python -mjson.tool | grep -A 2 "source" | grep -Po '"url":.*?[^\\]",' | cut -f 4 -d '"' > /tmp/tp_earthporn_img
-
-grep -Po '"title":.*?[^\\]",' /tmp/tp_showerthoughts.json > /tmp/tp_showerthoughts
-sed -i -e '1,2d' -e "s/\"title\": \"//g" -e "s/\",//g" -e 's/\\"/\"/g' /tmp/tp_showerthoughts
-
-#grep -Po '"author":.*?[^\\]",' /tmp/tp_earthporn.json > /tmp/tp_earthporn_author
-#sed -i -e '1d' -e 's/\"author\": "//g' -e 's/\",//g' /tmp/tp_earthporn_author
-cat /tmp/tp_earthporn.json | python -mjson.tool | grep -Po '"author":.*?[^\\]",' | cut -f 4 -d '"' | sed '1d' > /tmp/tp_earthporn_author
+cat /tmp/tp_earthporn.json | python -mjson.tool | grep -Po '"author":.*?[^\\]",' | cut -f 4 -d '"' > /tmp/tp_earthporn_author
+cat /tmp/tp_showerthoughts.json | python -mjson.tool | grep -Po '"title":.*?[^\\]",' | sed -e "s/\"title\": \"//g" -e "s/\",//g" -e 's/\\"/\"/g' > /tmp/tp_showerthoughts
 
 echo "Counting sheeps..."
 #Count how many lines are there in each files
@@ -38,13 +31,12 @@ txt_count=`cat /tmp/tp_showerthoughts | wc -l`
 img_number=$(( ( RANDOM % $img_count )  + 1 ))
 txt_number=$(( ( RANDOM % $txt_count )  + 1 ))
 
-
 img_url=`sed "${img_number}q;d" /tmp/tp_earthporn_img`
 text=`sed "${txt_number}q;d" /tmp/tp_showerthoughts`
 credits=`sed "${img_number}q;d" /tmp/tp_earthporn_author`
 caption="Photo Credits: /u/$credits"
 
-echo "Thinking something creative.... few moments"
+echo "Thinking something creative..."
 wget $img_url -q -O /tmp/tp_image.png
 img_res=`identify /tmp/tp_image.png | awk '{print $3}'`
 img_width=`echo $img_res | awk -Fx '{print $NR}'`
