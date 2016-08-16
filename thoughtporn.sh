@@ -14,7 +14,7 @@ useragent="Mozilla/5.0 (X11; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"
 echo "Starting brain..."
 #Download earthporn & showerthoughts subreddit top few posts
 wget get --header="Accept: text/html" -U $useragent --no-check-certificate -q  - $url$img_subreddit/.json -O /tmp/tp_earthporn.json
-wget get --header="Accept: text/html" -U $useragent --no-check-certificate -q  - $url$text_subreddit/.json -O /tmp/tp_showerthoughts.json
+wget get --header="Accept: text/html" -U $useragent --no-check-certificate -q  - "$url$text_subreddit/top.json?sort=top&t=week&limit=100" -O /tmp/tp_showerthoughts.json
 
 
 #Filter images URL and titles from the subreddits. Filtering is not perfect right now, but works most of the times
@@ -58,5 +58,6 @@ convert -background '#0009' -fill silver -size ${img_width}x$author_height -grav
 composite /tmp/tp_caption.png /tmp/tp_image.png -gravity center /tmp/final_tp.png
 composite /tmp/tp_author.png /tmp/final_tp.png -gravity southeast /tmp/final_tp.png
 firefox /tmp/final_tp.png
+mogrify -resize 1920x1080 /tmp/final_tp.png
 echo "Done. Please check your browser (firefox)"
 #rm -rf /tmp/tp_*
