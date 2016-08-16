@@ -57,7 +57,7 @@ convert -background '#0009' -fill silver -size ${img_width}x$txt_height -gravity
 convert -background '#0009' -fill silver -size ${img_width}x$author_height -gravity southeast caption:"$caption" /tmp/tp_author.png
 composite /tmp/tp_caption.png /tmp/tp_image.png -gravity center /tmp/final_tp.png
 composite /tmp/tp_author.png /tmp/final_tp.png -gravity southeast /tmp/final_tp.png
-firefox /tmp/final_tp.png
 mogrify -resize 1920x1080 /tmp/final_tp.png
+firefox /tmp/final_tp.png
 echo "Done. Please check your browser (firefox)"
 #rm -rf /tmp/tp_*
