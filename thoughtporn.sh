@@ -42,14 +42,22 @@ img_res=`identify /tmp/tp_image.png | awk '{print $3}'`
 img_width=`echo $img_res | awk -Fx '{print $NR}'`
 img_height=`echo $img_res | awk -Fx '{print $NF}'`
 txt_height=$(($img_height/15))
-author_height=$(($img_height/70))
+author_height=$(($img_height/40))
 
 echo "Giving life to thoughts...."
-convert -background '#0009' -fill silver -size ${img_width}x$txt_height -gravity Center caption:"$text" /tmp/tp_caption.png
-convert -background '#0009' -fill silver -size ${img_width}x$author_height -gravity southeast caption:"$caption" /tmp/tp_author.png
-composite /tmp/tp_caption.png /tmp/tp_image.png -gravity center /tmp/final_tp.png
-composite /tmp/tp_author.png /tmp/final_tp.png -gravity southeast /tmp/final_tp.png
-mogrify -resize 1920x1080 /tmp/final_tp.png
+#convert -background '#0009' -fill silver -size ${img_width}x$txt_height -gravity Center caption:"$text" /tmp/tp_caption.png
+#convert -background '#0009' -fill silver -size ${img_width}x$author_height -gravity northwest caption:"Generated Using: http://github.com/avasz/thoughtporn" -gravity southeast caption:"$caption" /tmp/tp_author.png
+#composite /tmp/tp_caption.png /tmp/tp_image.png -gravity center /tmp/final_tp.png
+#composite /tmp/tp_author.png /tmp/final_tp.png -gravity southeast /tmp/final_tp.png
+#mogrify -resize 1920x1080 /tmp/final_tp.png
+convert /tmp/tp_image.png \
+    -background '#0009' -fill silver -size ${img_width}x$txt_height \
+    caption:"$text" -gravity center -compose over -composite \
+    -background '#0008' -fill silver -size ${img_width}x$author_height \
+    caption:"$caption" -gravity northeast -compose over -composite \
+    -background '#0008' -fill silver -size ${img_width}x$(($author_height-5)) \
+    caption:"Generated using: https://github.com/avasz/thoughtporn" -gravity southeast -compose over -composite \
+    /tmp/final_tp.png
 firefox /tmp/final_tp.png
 echo "Done. Please check your browser (firefox)"
 #rm -rf /tmp/tp_*
