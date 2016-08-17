@@ -71,7 +71,7 @@ function imagework {
 #composite /tmp/tp_author.png /tmp/final_tp.png -gravity southeast /tmp/final_tp.png
 
 function work {
-    echo "Drawing thoughts..."
+    echo "Painting my thoughts..."
     convert /tmp/tp_image.png \
         -background '#0009' -fill silver -size ${img_width}x$txt_height \
         caption:"$text" -gravity center -compose over -composite \
