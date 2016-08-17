@@ -17,7 +17,7 @@ WGET="wget get --header=\"Accept: text/html\" -U $useragent --no-check-certifica
 tojson="python -mjson.tool"
 
 #Local Part
-DIRECTORY="/home/$USER/.thoughtporn"
+DIRECTORY="$HOME/.thoughtporn"
 
 echo "Activating Brain..."
 
@@ -30,7 +30,7 @@ function download {
     $WGET - "$url$text_subreddit/top.json?sort=top&t=week&limit=100" -O /tmp/tp_showerthoughts.json
     cat /tmp/tp_earthporn.json | $tojson | grep -A 2 "source" | grep -Po '"url":.*?[^\\]",' | cut -f 4 -d '"' > $DIRECTORY/tp_earthporn_img
     cat /tmp/tp_earthporn.json | $tojson | grep -Po '"author":.*?[^\\]",' | cut -f 4 -d '"' > $DIRECTORY/tp_earthporn_author
-    cat /tmp/tp_showerthoughts.json | $tojson | grep -Po '"title":.*?[^\\]",' | sed -e "s/\"title\": \"//g" -e "s/\",//g" -e 's/\\"/\"/g' > $DIRECTORY/tp_showerthoughts
+    cat /tmp/tp_showerthoughts.json | $tojson | grep -Po '"title":.*?[^\\]",' | sed -e "s/\"title\": \"//g" -e "s/u2019/\'/g" -e "s/\",//g" -e 's/\\"/\"/g' > $DIRECTORY/tp_showerthoughts
 }
 
 #Count how many lines are there in each files, should be 100 by default, but just in case.
