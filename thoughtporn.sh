@@ -5,6 +5,7 @@
 #Hats off to the photographers from /r/earthporn. I do not own any pictures or thoughts. All credits to the photographers from /r/earthporn and geniuses from /r/showerthoughts.
 #I am not held liable if anyone uses the iamges generated from this script and gets in legal trouble. Use it at your own risk.
 #Images should not be used for commercial purposes, if there is any.
+#Avasz <avashmulmi at gmail.com>
 
 url="http://reddit.com"
 img_subreddit="/r/earthporn"
